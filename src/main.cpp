@@ -115,7 +115,8 @@ bool getFileList(std::string path, std::vector<std::string> &fileList, std::stri
 			auto pos1 = fname.find(extension);
 			if (pos1 == std::string::npos) continue;
 
-			fileList.push_back(path+fname);
+			//fileList.push_back(path+fname);
+			fileList.push_back(fname);
 		}
 
 	} while (entry != NULL);
@@ -129,8 +130,46 @@ bool getFileList(std::string path, std::vector<std::string> &fileList, std::stri
 	return true;
 }
 
-bool createResizeImage(std::vector<std::string> fileList, std::string dirName)
+bool createResizeImage(std::string srcDir, std::vector<std::string> fileList, std::string dstDir, double ratio)
 {
+#if 0
+    for (const auto& e : fileList){
+        std::cout << srcDir << "/" << e << std::endl;
+
+        // オープン
+        cv::Mat src = cv::imread(srcDir+"/"+e);
+
+        // 縮小
+        cv::resize(src, src, cv::Size(), ratio, ratio);
+
+        // 保存
+        cv::imwrite(dstDir+"/"+e, src);
+        
+        std::cout << "done." << std::endl;
+    }
+#endif
+
+    for (const auto& e : fileList){
+        std::cout << srcDir << "/" << e << std::endl;
+        std::string filename = srcDir + "/" + e;
+
+        // 画像ファイルをdstにコピー
+        std::string cmd = "cp " + filename + " test_resize";
+        system(cmd.c_str());
+
+        // オープン
+        cv::Mat src = cv::imread(dstDir+"/"+e);
+
+        // 縮小
+        cv::resize(src, src, cv::Size(), ratio, ratio);
+
+        // 保存
+        cv::imwrite(dstDir+"/"+e, src);
+        
+        std::cout << "done." << std::endl;
+    }
+    
+
     return true;
 }
 
@@ -154,10 +193,10 @@ int main (int argc, char *argv[])
 
     // ディレクトリ内のすべてのjpgのファイル名をリスト化
     std::vector<std::string> fileList;
-    if (!getFileList(dirNameSrc, fileList, "jpg")) return -1;
+    if (!getFileList(dirNameSrc, fileList, "JPG")) return -1;
 
     // 縮小処理して保存
-    if (!createResizeImage(fileList, dirNameDst)) return -1;
+    if (!createResizeImage(dirNameSrc, fileList, dirNameDst, ratio)) return -1;
 
     // このとき、メタ情報も残したいのだができる？
 
