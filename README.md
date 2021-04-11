@@ -12,7 +12,27 @@
 ## 参考リンク
 * [コマンドライン引数の参考](https://www.mm2d.net/main/prog/c/getopt-02.html)
 
-## imagemagik
-* 一括縮小コマンド
+## ソフト開発の中断
+* 上記仕様でソフト開発を進めていたが、重大な欠点を見つけてしまった
+* 撮影情報を残せないんですよ。OpenCVでは。これは、仕様っぽい。
+* で、ググってみたところ、linux定番のコマンドライン画像編集ソフトのImageMagikならばできるって。
+* なので、開発を中断し、下記のコマンドで対応することにします。
+
+# imagemagik
+* 詳細はどっかでググってね
+
+## 一括縮小コマンド
 * [参考１](https://liginc.co.jp/394506)
 * [参考２](http://technique.sonots.com/?UNIX%2F%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%2F%E5%A4%89%E6%8F%9B%2Fmogrify)
+
+## シェルスクリプト
+* 以下の内容のスクリプトを作って、対象ディレクトリで実行すれば、一括で変換できます。
+
+```
+#!/bin/sh
+
+echo "start..."
+mogrify -resize 27% -quality 100 *.JPG
+echo "finished!"
+
+```
